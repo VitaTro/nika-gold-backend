@@ -18,7 +18,7 @@ const swaggerSpecs = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // маршрути
-app.get("/index", (req, res) => {
+app.get("/welcome", (req, res) => {
   res.send("Głowna strona");
 });
 
