@@ -8,4 +8,7 @@ node_modules/
 .eslintcache
 
 # dotenv environment variables file
+node_modules/
 .env
+.idea
+.vscode

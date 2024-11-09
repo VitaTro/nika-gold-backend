@@ -1,25 +1,20 @@
 const express = require("express");
-const logger = require("morgan");
-const cors = require("cors");
-const swaggerDocument = require("./config/swagger");
-const swaggerJsdoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
+const categoryRoutes = require("./src/routes/category/userCategory");
+const authRoutes = require("./src/routes/auth/authRoutes");
+const goldRoutes = require("./src/routes/products/goldProductsRouter");
+const silverRoutes = require("./src/routes/products/silverProductsRouter");
 const app = express();
 
-// налаштування swagger
+// Middleware
+app.use(express.json());
 
-const swaggerOptions = {
-  swaggerDefinition: swaggerDocument,
-  apis: ["./routes/*.js"],
-};
-const swaggerSpecs = swaggerJsdoc(swaggerOptions);
+// Routes
+app.use("/api/category", categoryRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/goldProducts", goldRoutes);
+app.use("/api/silverProducts", silverRoutes);
 
-// використання swagger UI
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
-
-// маршрути
 app.get("/welcome", (req, res) => {
-  res.send("Głowna strona");
+  res.send("Welcome to the API");
 });
-
 module.exports = app;
