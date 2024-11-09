@@ -1,6 +1,5 @@
 const { Strategy, ExtractJwt } = require("passport-jwt");
-const mongoose = require("mongoose");
-const User = mongoose.model("User");
+const User = require("../../src/schemas/User"); // Правильний шлях до моделі User
 const dotenv = require("dotenv");
 
 dotenv.config();
