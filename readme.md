@@ -1,1 +1,1 @@
-https://vitatro.github.io/my-project-backend/
+http://localhost:3000/api-docs/
