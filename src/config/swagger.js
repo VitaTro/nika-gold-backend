@@ -1,31 +1,87 @@
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express");
 
-const options = {
-  definition: {
+const swaggerOptions = {
+  swaggerDefinition: {
     openapi: "3.0.0",
     info: {
       title: "Simple Inventory API",
       version: "1.0.0",
-      description: "This is a simple API",
-      contact: {
-        email: "you@your-company.com",
-      },
-      license: {
-        name: "Apache 2.0",
-        url: "http://www.apache.org/licenses/LICENSE-2.0.html",
-      },
+      description: "API documentation for the Simple Inventory project",
     },
     servers: [
       {
-        url: "https://virtserver.swaggerhub.com/VITYLJATROJAN/nika-gold/1.0.0",
-        description: "SwaggerHub API Auto Mocking",
+        url: "http://localhost:3000",
+        description: "Development server",
       },
     ],
+    components: {
+      schemas: {
+        GoldProduct: {
+          type: "object",
+          required: ["name", "category", "price"],
+          properties: {
+            name: {
+              type: "string",
+              description: "Назва продукту",
+            },
+            category: {
+              type: "string",
+              description: "Категорія продукту",
+            },
+            price: {
+              type: "number",
+              description: "Ціна продукту",
+            },
+            description: {
+              type: "string",
+              description: "Опис продукту",
+            },
+            inStock: {
+              type: "boolean",
+              description: "Наявність на складі",
+            },
+            visible: {
+              type: "boolean",
+              description: "Видимість продукту",
+            },
+          },
+        },
+        SilverProduct: {
+          type: "object",
+          required: ["name", "category", "price"],
+          properties: {
+            name: {
+              type: "string",
+              description: "Назва продукту",
+            },
+            category: {
+              type: "string",
+              description: "Категорія продукту",
+            },
+            price: {
+              type: "number",
+              description: "Ціна продукту",
+            },
+            description: {
+              type: "string",
+              description: "Опис продукту",
+            },
+            inStock: {
+              type: "boolean",
+              description: "Наявність на складі",
+            },
+            visible: {
+              type: "boolean",
+              description: "Видимість продукту",
+            },
+          },
+        },
+      },
+    },
   },
-  apis: ["./routes/*.js"], // шляхи до файлів з маршрутами
+  apis: ["./src/routes/*.js"], // Вказуй правильний шлях до файлів з маршрутами
 };
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
-const swaggerSpec = swaggerJsdoc(options);
-
-module.exports = { swaggerSpec };
+module.exports = { swaggerDocs };

@@ -2,8 +2,9 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const passport = require("passport");
 const swaggerUi = require("swagger-ui-express");
-const { swaggerSpec } = require("./src/config/swagger");
-const app = require("./App");
+const { swaggerDocs } = require("./src/config/swagger");
+const app = express();
+
 const passportConfig = require("./src/config/config-passport");
 
 dotenv.config(); // Завантаження змінних середовища з файлу .env
@@ -25,7 +26,7 @@ passportConfig(passport);
 app.use(passport.initialize());
 
 // Swagger
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Запуск сервера
 app.listen(PORT, () => {
