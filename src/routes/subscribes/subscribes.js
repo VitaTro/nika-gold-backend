@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Subscriber = require("../../schema/subscriber");
+const Subscriber = require("../../schemas/subscribe");
 const Joi = require("joi");
 
 // Валідаційна схема для підписки
@@ -8,7 +8,40 @@ const subscriptionSchema = Joi.object({
   email: Joi.string().email().required(),
 });
 
-// Підписка на нові товари
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Subscriber:
+ *       type: object
+ *       required:
+ *         - email
+ *       properties:
+ *         email:
+ *           type: string
+ *           description: Електронна пошта підписника
+ */
+
+/**
+ * @swagger
+ * /api/subscribe:
+ *   post:
+ *     tags: [Subscriber]
+ *     summary: Підписка на нові товари
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Subscriber'
+ *     responses:
+ *       201:
+ *         description: Підписка успішна
+ *       400:
+ *         description: Невірний запит
+ *       500:
+ *         description: Внутрішня помилка сервера
+ */
 router.post("/subscribe", async (req, res) => {
   const { error } = subscriptionSchema.validate(req.body);
   if (error) {
@@ -31,7 +64,28 @@ router.post("/subscribe", async (req, res) => {
   }
 });
 
-// Відписка від нових товарів
+/**
+ * @swagger
+ * /api/unsubscribe:
+ *   post:
+ *     tags: [Subscriber]
+ *     summary: Відписка від нових товарів
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Subscriber'
+ *     responses:
+ *       200:
+ *         description: Відписка успішна
+ *       400:
+ *         description: Невірний запит
+ *       404:
+ *         description: Електронну пошту не знайдено
+ *       500:
+ *         description: Внутрішня помилка сервера
+ */
 router.post("/unsubscribe", async (req, res) => {
   const { error } = subscriptionSchema.validate(req.body);
   if (error) {

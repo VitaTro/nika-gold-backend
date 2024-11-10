@@ -7,6 +7,7 @@ const goldProductSchema = new mongoose.Schema({
   description: { type: String },
   inStock: { type: Boolean, default: true },
   visible: { type: Boolean, default: true }, // Нове поле для видимості товару
+  createdAt: { type: Date, default: Date.now },
 });
 
 const GoldProduct = mongoose.model("GoldProduct", goldProductSchema);

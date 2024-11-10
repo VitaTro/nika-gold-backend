@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const GoldProduct = require("../../schemas/goldProducts");
+const SetProduct = require("../../schemas/setProducts");
 
 /**
  * @swagger
  * components:
  *   schemas:
- *     GoldProduct:
+ *     SetProduct:
  *       type: object
  *       required:
  *         - name
@@ -15,39 +15,39 @@ const GoldProduct = require("../../schemas/goldProducts");
  *       properties:
  *         name:
  *           type: string
- *           description: Назва продукту
+ *           description: Назва набору
  *         category:
  *           type: string
- *           description: Категорія продукту
+ *           description: Категорія набору
  *         price:
  *           type: number
- *           description: Ціна продукту
+ *           description: Ціна набору
  *         description:
  *           type: string
- *           description: Опис продукту
+ *           description: Опис набору
  *         inStock:
  *           type: boolean
  *           description: Наявність на складі
  *         visible:
  *           type: boolean
- *           description: Видимість продукту
+ *           description: Видимість набору
  */
 
 /**
  * @swagger
- * /api/products/gold:
+ * /api/products/set:
  *   get:
- *     tags: [Products/Gold]
- *     summary: Отримати всі продукти золота
+ *     tags: [Products/Set]
+ *     summary: Отримати всі набори
  *     responses:
  *       200:
- *         description: Список всіх продуктів золота
+ *         description: Список всіх наборів
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/GoldProduct'
+ *                 $ref: '#/components/schemas/SetProduct'
  */
 router.get("/", async (req, res) => {
   try {
@@ -55,8 +55,8 @@ router.get("/", async (req, res) => {
     if (req.query.category) {
       filter.category = req.query.category;
     }
-    const products = await GoldProduct.find(filter);
-    res.status(200).send(products);
+    const sets = await SetProduct.find(filter);
+    res.status(200).send(sets);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -64,27 +64,27 @@ router.get("/", async (req, res) => {
 
 /**
  * @swagger
- * /api/products/gold:
+ * /api/products/set:
  *   post:
- *     tags: [Products/Gold]
- *     summary: Створити новий продукт золота
+ *     tags: [Products/Set]
+ *     summary: Створити новий набір
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/GoldProduct'
+ *             $ref: '#/components/schemas/SetProduct'
  *     responses:
  *       201:
- *         description: Продукт створено
+ *         description: Набір створено
  *       400:
  *         description: Невірний запит
  */
 router.post("/", async (req, res) => {
   try {
-    const product = new GoldProduct(req.body);
-    await product.save();
-    res.status(201).send(product);
+    const set = new SetProduct(req.body);
+    await set.save();
+    res.status(201).send(set);
   } catch (error) {
     res.status(400).send(error);
   }
@@ -92,42 +92,41 @@ router.post("/", async (req, res) => {
 
 /**
  * @swagger
- * /api/products/gold/{id}:
+ * /api/products/set/{id}:
  *   put:
- *     tags: [Products/Gold]
- *     summary: Оновити продукт золота
+ *     tags: [Products/Set]
+ *     summary: Оновити набір
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: ID продукту
+ *         description: ID набору
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/GoldProduct'
+ *             $ref: '#/components/schemas/SetProduct'
  *     responses:
  *       200:
- *         description: Продукт оновлено
+ *         description: Набір оновлено
  *       400:
  *         description: Невірний запит
  *       404:
- *         description: Продукт не знайдено
+ *         description: Набір не знайдено
  */
 router.put("/:id", async (req, res) => {
   try {
-    const product = await GoldProduct.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    if (!product) {
+    const set = await SetProduct.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!set) {
       return res.status(404).send();
     }
-    res.status(200).send(product);
+    res.status(200).send(set);
   } catch (error) {
     res.status(400).send(error);
   }
@@ -135,17 +134,17 @@ router.put("/:id", async (req, res) => {
 
 /**
  * @swagger
- * /api/products/gold/{id}/visibility:
+ * /api/products/set/{id}/visibility:
  *   patch:
- *     tags: [Products/Gold]
- *     summary: Змінити видимість продукту золота
+ *     tags: [Products/Set]
+ *     summary: Змінити видимість набору
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: ID продукту
+ *         description: ID набору
  *     requestBody:
  *       required: true
  *       content:
@@ -155,26 +154,26 @@ router.put("/:id", async (req, res) => {
  *             properties:
  *               visible:
  *                 type: boolean
- *                 description: Видимість продукту
+ *                 description: Видимість набору
  *     responses:
  *       200:
- *         description: Видимість продукту змінено
+ *         description: Видимість набору змінено
  *       400:
  *         description: Невірний запит
  *       404:
- *         description: Продукт не знайдено
+ *         description: Набір не знайдено
  */
 router.patch("/:id/visibility", async (req, res) => {
   try {
-    const product = await GoldProduct.findByIdAndUpdate(
+    const set = await SetProduct.findByIdAndUpdate(
       req.params.id,
       { visible: req.body.visible },
       { new: true }
     );
-    if (!product) {
+    if (!set) {
       return res.status(404).send();
     }
-    res.status(200).send(product);
+    res.status(200).send(set);
   } catch (error) {
     res.status(400).send(error);
   }

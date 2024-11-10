@@ -35,8 +35,9 @@ const SilverProduct = require("../../schemas/silverProducts");
 
 /**
  * @swagger
- * /api/silverProducts:
+ * /api/products/silver:
  *   get:
+ *     tags: [Products/Silver]
  *     summary: Отримати всі продукти срібла
  *     responses:
  *       200:
@@ -63,8 +64,9 @@ router.get("/", async (req, res) => {
 
 /**
  * @swagger
- * /api/silverProducts:
+ * /api/products/silver:
  *   post:
+ *     tags: [Products/Silver]
  *     summary: Створити новий продукт срібла
  *     requestBody:
  *       required: true
@@ -90,8 +92,9 @@ router.post("/", async (req, res) => {
 
 /**
  * @swagger
- * /api/silverProducts/{id}:
+ * /api/products/silver/{id}:
  *   put:
+ *     tags: [Products/Silver]
  *     summary: Оновити продукт срібла
  *     parameters:
  *       - in: path
@@ -132,8 +135,9 @@ router.put("/:id", async (req, res) => {
 
 /**
  * @swagger
- * /api/silverProducts/{id}/visibility:
+ * /api/products/silver/{id}/visibility:
  *   patch:
+ *     tags: [Products/Silver]
  *     summary: Змінити видимість продукту срібла
  *     parameters:
  *       - in: path

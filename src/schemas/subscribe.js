@@ -1,6 +1,5 @@
 const { required } = require("joi");
 const mongoose = require("mongoose");
-const { subscribe } = require("../../app");
 
 const subscriberSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
