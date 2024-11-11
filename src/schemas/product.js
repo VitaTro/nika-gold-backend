@@ -15,9 +15,11 @@ const productSchema = new mongoose.Schema({
   },
   description: {
     type: String,
+    required: true,
   },
   photoUrl: {
-    type: String, // URL або шлях до зображення продукту
+    type: String, // Додаємо поле для URL-адреси зображення
+    required: true,
   },
   createdAt: {
     type: Date,

@@ -3,6 +3,7 @@ const router = express.Router();
 const cloudinary = require("../../config/cloudinary");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
+const Product = require("../../schemas/product"); // Модель продукту
 
 /**
  * @swagger
@@ -34,7 +35,21 @@ const upload = multer({ dest: "uploads/" });
  */
 router.post("/upload", upload.single("image"), async (req, res) => {
   try {
-    const result = await cloudinary.uploader.upload(req.file.path);
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      public_id: `products/${req.file.originalname.split(".")[0]}`,
+    });
+
+    // Зберігання URL зображення у базі даних
+    const product = new Product({
+      name: req.body.name,
+      category: req.body.category,
+      price: req.body.price,
+      description: req.body.description,
+      photoUrl: result.secure_url,
+    });
+
+    await product.save();
+
     res.status(200).json({
       message: "Файл завантажено",
       filePath: result.secure_url,
