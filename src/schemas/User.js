@@ -17,18 +17,23 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user",
+  },
   jwtToken: {
     type: String,
     default: null,
   },
   avatar: {
-    type: String, // URL або шлях до зображення аватара
+    type: String,
     default: null,
   },
   basket: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Product", // Можливо, потрібно буде створити модель Product
+      ref: "Product",
     },
   ],
   createdAt: {

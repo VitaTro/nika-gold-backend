@@ -9,7 +9,7 @@ const app = require("./App");
 
 dotenv.config(); // Завантаження змінних середовища з файлу .env
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Підключення до MongoDB без застарілих параметрів
 mongoose

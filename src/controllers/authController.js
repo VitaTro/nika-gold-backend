@@ -1,70 +1,94 @@
 const User = require("../schemas/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
 
-dotenv.config();
-
-// Функція реєстрації користувача
-exports.register = async (req, res) => {
+// Перевірка першого адміністратора
+exports.checkFirstAdmin = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-
-    // Перевірка чи користувач вже існує
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
-
-    // Хешування пароля
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Створення нового користувача
-    const newUser = new User({ username, email, password: hashedPassword });
-    await newUser.save();
-
-    res.status(201).json({ message: "User registered successfully" });
+    const adminCount = await User.countDocuments({ role: "admin" });
+    res.status(200).json({ isFirstAdmin: adminCount === 0 });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: error.message });
   }
 };
 
-// Функція входу користувача
+// Реєстрація користувача
+exports.register = async (req, res) => {
+  try {
+    const { username, email, password, role } = req.body;
+    const hashedPassword = bcrypt.hashSync(password, 8);
+
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+      role,
+    });
+
+    await newUser.save();
+    res.status(201).send(newUser);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
+
+// Логін користувача
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    console.log("Received login request:", { email, password });
-
-    // Перевірка чи користувач існує
     const user = await User.findOne({ email });
+
     if (!user) {
-      console.log("User not found:", email);
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(404).send("User not found");
     }
 
-    // Перевірка пароля
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      console.log("Password mismatch for user:", email);
-      return res.status(400).json({ message: "Invalid credentials" });
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).send("Invalid password");
     }
 
-    // Генерація JWT токена
-    const token = jwt.sign({ id: user._id }, process.env.SECRET, {
-      expiresIn: "3h",
-    });
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
-    console.log("Login successful, generated token:", token);
-
-    res.status(200).json({ token });
+    res.status(200).send({ auth: true, token });
   } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(400).send(error);
   }
 };
 
-// Функція виходу користувача
+// Логаут користувача
 exports.logout = (req, res) => {
-  res.status(200).json({ message: "User logged out" });
+  res.status(200).send({ auth: false, token: null });
+};
+
+// Реєстрація адміністратора (один раз)
+exports.registerAdmin = async (req, res) => {
+  try {
+    const existingAdmin = await User.findOne({ role: "admin" });
+
+    if (existingAdmin) {
+      return res.status(403).send("Admin already exists");
+    }
+
+    const { username, email, password } = req.body;
+    const hashedPassword = bcrypt.hashSync(password, 8);
+
+    const newAdmin = new User({
+      username,
+      email,
+      password: hashedPassword,
+      role: "admin",
+    });
+
+    await newAdmin.save();
+    res.status(201).send(newAdmin);
+  } catch (error) {
+    res.status(400).send(error);
+  }
 };

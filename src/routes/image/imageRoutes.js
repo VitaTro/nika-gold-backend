@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../../middleware/uploadMiddleware");
+const cloudinary = require("../../config/cloudinary");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 /**
  * @swagger
@@ -14,7 +16,7 @@ const upload = require("../../middleware/uploadMiddleware");
  *           schema:
  *             type: object
  *             properties:
- *               photo:
+ *               image:
  *                 type: string
  *                 format: binary
  *     responses:
@@ -30,13 +32,16 @@ const upload = require("../../middleware/uploadMiddleware");
  *                 filePath:
  *                   type: string
  */
-router.post("/upload", upload.single("photo"), (req, res) => {
-  res.status(200).json({
-    message: "Файл завантажено",
-    filePath: `http://localhost:${process.env.PORT || 3000}/${
-      req.file.filename
-    }`,
-  });
+router.post("/upload", upload.single("image"), async (req, res) => {
+  try {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    res.status(200).json({
+      message: "Файл завантажено",
+      filePath: result.secure_url,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 module.exports = router;
