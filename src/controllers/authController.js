@@ -34,25 +34,32 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    console.log("Received login request:", { email, password });
+
     // Перевірка чи користувач існує
     const user = await User.findOne({ email });
     if (!user) {
+      console.log("User not found:", email);
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
     // Перевірка пароля
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log("Password mismatch for user:", email);
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
     // Генерація JWT токена
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id }, process.env.SECRET, {
       expiresIn: "3h",
     });
 
+    console.log("Login successful, generated token:", token);
+
     res.status(200).json({ token });
   } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
