@@ -94,7 +94,7 @@ router.get("/:type", async (req, res) => {
 
 /**
  * @swagger
- * /api/products/add-product:
+ * /api/products:
  *   post:
  *     summary: Додавання нового продукту
  *     tags: [Products]
@@ -114,7 +114,7 @@ router.get("/:type", async (req, res) => {
  *       500:
  *         description: Внутрішня помилка сервера
  */
-router.post("/add-product", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { name, category, price, description, photoUrl } = req.body;
 
