@@ -12,6 +12,7 @@ const GoldProduct = require("../../schemas/goldProducts");
  *         - name
  *         - category
  *         - price
+ *         - subcategory
  *       properties:
  *         name:
  *           type: string
@@ -25,12 +26,26 @@ const GoldProduct = require("../../schemas/goldProducts");
  *         description:
  *           type: string
  *           description: Опис продукту
+ *         photoUrl:
+ *           type: string
+ *           description: URL зображення продукту
  *         inStock:
  *           type: boolean
  *           description: Наявність на складі
  *         visible:
  *           type: boolean
  *           description: Видимість продукту
+ *         subcategory:
+ *           type: string
+ *           description: Підкатегорія продукту
+ *           enum:
+ *             - chains
+ *             - earrings
+ *             - bracelets
+ *             - rings
+ *             - pendants
+ *             - tic
+ *             - incense
  */
 
 /**
@@ -54,6 +69,9 @@ router.get("/", async (req, res) => {
     const filter = { visible: true };
     if (req.query.category) {
       filter.category = req.query.category;
+    }
+    if (req.query.subcategory) {
+      filter.subcategory = req.query.subcategory;
     }
     const products = await GoldProduct.find(filter);
     res.status(200).send(products);
@@ -175,6 +193,39 @@ router.patch("/:id/visibility", async (req, res) => {
       return res.status(404).send();
     }
     res.status(200).send(product);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+/**
+ * @swagger
+ * /api/products/gold/{id}:
+ *   delete:
+ *     tags: [Products/Gold]
+ *     summary: Видалити продукт золота
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID продукту
+ *     responses:
+ *       200:
+ *         description: Продукт видалено
+ *       400:
+ *         description: Невірний запит
+ *       404:
+ *         description: Продукт не знайдено
+ */
+router.delete("/:id", async (req, res) => {
+  try {
+    const product = await GoldProduct.findByIdAndDelete(req.params.id);
+    if (!product) {
+      return res.status(404).send();
+    }
+    res.status(200).send({ message: "Product deleted successfully" });
   } catch (error) {
     res.status(400).send(error);
   }

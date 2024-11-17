@@ -59,4 +59,33 @@ router.post("/upload", upload.single("image"), async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/delete-image:
+ *   delete:
+ *     summary: Видалення зображення
+ *     tags: [Images]
+ *     parameters:
+ *       - in: query
+ *         name: public_id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Public ID зображення
+ *     responses:
+ *       200:
+ *         description: Зображення видалено
+ *       400:
+ *         description: Невірний запит
+ */
+router.delete("/delete-image", async (req, res) => {
+  try {
+    const publicId = req.query.public_id;
+    await cloudinary.uploader.destroy(publicId);
+    res.status(200).send({ message: "Image deleted successfully" });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
 module.exports = router;
