@@ -9,6 +9,10 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  subcategory: {
+    type: String,
+    required: true,
+  },
   price: {
     type: Number,
     required: true,
@@ -18,7 +22,7 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   photoUrl: {
-    type: String, // Додаємо поле для URL-адреси зображення
+    type: String,
     required: true,
   },
   createdAt: {

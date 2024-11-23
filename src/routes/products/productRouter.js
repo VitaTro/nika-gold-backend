@@ -116,11 +116,13 @@ router.get("/:type", async (req, res) => {
  */
 router.post("/", async (req, res) => {
   try {
-    const { name, category, price, description, photoUrl } = req.body;
+    const { name, category, subcategory, price, description, photoUrl } =
+      req.body;
 
     const newProduct = new Product({
       name,
       category,
+      subcategory,
       price,
       description,
       photoUrl,

@@ -23,13 +23,13 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Зро�
 app.use("/api/category", categoryRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
-app.use("/api/goldProducts", goldRoutes);
-app.use("/api/silverProducts", silverRoutes);
+app.use("/api/products/gold", goldRoutes);
+app.use("/api/products/silver", silverRoutes);
 app.use("/api/subscribers", subscriberRoutes);
-app.use("/api/boxProducts", boxProductsRouter);
-app.use("/api/setProducts", setProductsRouter);
-app.use("/api", inventoryRoutes);
-app.use("/api", imageRoutes);
+app.use("/api/products/box", boxProductsRouter);
+app.use("/api/products/set", setProductsRouter);
+app.use("/api/inventory", inventoryRoutes);
+app.use("/api/images", imageRoutes);
 app.use("/api/products", productRouter);
 app.use("/api/upload", uploadRoutes);
 app.get("/", (req, res) => {
