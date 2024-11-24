@@ -179,5 +179,36 @@ router.patch("/:id/visibility", async (req, res) => {
     res.status(400).send(error);
   }
 });
-
+/**
+ * @swagger
+ * /api/products/silver/{id}:
+ *   delete:
+ *     tags: [Products/Silver]
+ *     summary: Видалити продукт срібла
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID продукту
+ *     responses:
+ *       200:
+ *         description: Продукт видалено
+ *       400:
+ *         description: Невірний запит
+ *       404:
+ *         description: Продукт не знайдено
+ */
+router.delete("/:id", async (req, res) => {
+  try {
+    const silver = await SilverProduct.findByIdAndDelete(req.params.id);
+    if (!silver) {
+      return res.status(404).send();
+    }
+    res.status(200).send({ message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
 module.exports = router;

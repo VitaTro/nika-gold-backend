@@ -44,6 +44,10 @@ const swaggerOptions = {
               type: "string",
               description: "Опис продукту",
             },
+            photoUrl: {
+              type: "string",
+              description: "URL зображення продукту",
+            },
             inStock: {
               type: "boolean",
               description: "Наявність на складі",
@@ -73,6 +77,10 @@ const swaggerOptions = {
             description: {
               type: "string",
               description: "Опис продукту",
+            },
+            photoUrl: {
+              type: "string",
+              description: "URL зображення продукту",
             },
             inStock: {
               type: "boolean",
@@ -104,6 +112,10 @@ const swaggerOptions = {
               type: "string",
               description: "Опис набору",
             },
+            photoUrl: {
+              type: "string",
+              description: "URL зображення продукту",
+            },
             inStock: {
               type: "boolean",
               description: "Наявність на складі",
@@ -133,6 +145,10 @@ const swaggerOptions = {
             description: {
               type: "string",
               description: "Опис коробки",
+            },
+            photoUrl: {
+              type: "string",
+              description: "URL зображення продукту",
             },
             inStock: {
               type: "boolean",

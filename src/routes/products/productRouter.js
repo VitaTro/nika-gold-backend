@@ -28,6 +28,12 @@ const Product = require("../../schemas/product");
  *         photoUrl:
  *           type: string
  *           description: URL зображення продукту
+ * inStock:
+ *           type: boolean
+ *           description: Наявність на складі
+ *visible:
+ *           type: boolean
+ *           description: Видимість коробки
  */
 
 /**
@@ -116,8 +122,17 @@ router.get("/:type", async (req, res) => {
  */
 router.post("/", async (req, res) => {
   try {
-    const { name, category, subcategory, price, description, photoUrl } =
-      req.body;
+    const {
+      name,
+      category,
+      subcategory,
+      price,
+      description,
+      photoUrl,
+      inStock,
+      visible,
+      createdAt,
+    } = req.body;
 
     const newProduct = new Product({
       name,
@@ -126,10 +141,60 @@ router.post("/", async (req, res) => {
       price,
       description,
       photoUrl,
+      inStock,
+      visible,
+      createdAt,
     });
 
     await newProduct.save();
     res.status(201).send(newProduct);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   patch:
+ *     summary: Оновлення продукту
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Ідентифікатор продукту
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
+ *     responses:
+ *       200:
+ *         description: Продукт оновлено
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: Продукт не знайдено
+ *       500:
+ *         description: Внутрішня помилка сервера
+ */
+router.patch("/:id", async (req, res) => {
+  try {
+    const updates = req.body;
+    const product = await Product.findByIdAndUpdate(req.params.id, updates, {
+      new: true,
+    });
+
+    if (!product) {
+      return res.status(404).send("Product not found");
+    }
+    res.json(product);
   } catch (error) {
     res.status(500).send(error);
   }

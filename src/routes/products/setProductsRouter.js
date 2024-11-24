@@ -178,5 +178,36 @@ router.patch("/:id/visibility", async (req, res) => {
     res.status(400).send(error);
   }
 });
-
+/**
+ * @swagger
+ * /api/products/set/{id}:
+ *   delete:
+ *     tags: [Products/Set]
+ *     summary: Видалити продукт набору
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID продукту
+ *     responses:
+ *       200:
+ *         description: Продукт видалено
+ *       400:
+ *         description: Невірний запит
+ *       404:
+ *         description: Продукт не знайдено
+ */
+router.delete("/:id", async (req, res) => {
+  try {
+    const set = await SetProduct.findByIdAndDelete(req.params.id);
+    if (!set) {
+      return res.status(404).send();
+    }
+    res.status(200).send({ message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
 module.exports = router;

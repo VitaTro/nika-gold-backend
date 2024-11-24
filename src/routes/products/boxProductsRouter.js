@@ -25,12 +25,16 @@ const BoxProduct = require("../../schemas/boxProducts");
  *         description:
  *           type: string
  *           description: Опис коробки
+ *         photoUrl:
+ *           type: string
+ *           description: URL зображення продукту
  *         inStock:
  *           type: boolean
  *           description: Наявність на складі
  *         visible:
  *           type: boolean
  *           description: Видимість коробки
+ *
  */
 
 /**
@@ -48,6 +52,8 @@ const BoxProduct = require("../../schemas/boxProducts");
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/BoxProduct'
+ *       500:
+ *         description: Внутрішня помилка сервера
  */
 router.get("/", async (req, res) => {
   try {
@@ -82,8 +88,27 @@ router.get("/", async (req, res) => {
  */
 router.post("/", async (req, res) => {
   try {
-    const box = new BoxProduct(req.body);
-    await box.save();
+    const {
+      name,
+      category,
+      price,
+      description,
+      photoUrl,
+      inStock,
+      visible,
+      createdAt,
+    } = req.body;
+    const newBoxProduct = new BoxProduct({
+      name,
+      category,
+      price,
+      description,
+      photoUrl,
+      inStock,
+      visible,
+      createdAt,
+    });
+    await newBoxProduct.save();
     res.status(201).send(box);
   } catch (error) {
     res.status(400).send(error);
@@ -179,4 +204,36 @@ router.patch("/:id/visibility", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/products/box/{id}:
+ *   delete:
+ *     tags: [Products/Box]
+ *     summary: Видалити коробку
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID продукту
+ *     responses:
+ *       200:
+ *         description: Продукт видалено
+ *       400:
+ *         description: Невірний запит
+ *       404:
+ *         description: Продукт не знайдено
+ */
+router.delete("/:id", async (req, res) => {
+  try {
+    const box = await BoxProduct.findByIdAndDelete(req.params.id);
+    if (!box) {
+      return res.status(404).send();
+    }
+    res.status(200).send({ message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
 module.exports = router;

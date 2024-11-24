@@ -25,6 +25,8 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  inStock: { type: Boolean, default: true },
+  visible: { type: Boolean, default: true },
   createdAt: {
     type: Date,
     default: Date.now,
