@@ -153,10 +153,10 @@ router.put("/:id", async (req, res) => {
 
 /**
  * @swagger
- * /api/products/gold/{id}/visibility:
+ * /api/products/gold/{id}:
  *   patch:
  *     tags: [Products/Gold]
- *     summary: Змінити видимість продукту золота
+ *     summary: Оновити властивості продукту золота
  *     parameters:
  *       - in: path
  *         name: id
@@ -171,23 +171,45 @@ router.put("/:id", async (req, res) => {
  *           schema:
  *             type: object
  *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Назва продукту
+ *               category:
+ *                 type: string
+ *                 description: Категорія продукту
+ *               price:
+ *                 type: number
+ *                 description: Ціна продукту
+ *               description:
+ *                 type: string
+ *                 description: Опис продукту
+ *               photoUrl:
+ *                 type: string
+ *                 description: URL зображення продукту
+ *               inStock:
+ *                 type: boolean
+ *                 description: Наявність на складі
  *               visible:
  *                 type: boolean
  *                 description: Видимість продукту
+ *               subcategory:
+ *                 type: string
+ *                 description: Підкатегорія продукту
  *     responses:
  *       200:
- *         description: Видимість продукту змінено
+ *         description: Властивості продукту оновлено
  *       400:
  *         description: Невірний запит
  *       404:
  *         description: Продукт не знайдено
  */
-router.patch("/:id/visibility", async (req, res) => {
+router.patch("/:id", async (req, res) => {
   try {
+    const updates = req.body;
     const product = await GoldProduct.findByIdAndUpdate(
       req.params.id,
-      { visible: req.body.visible },
-      { new: true }
+      updates,
+      { new: true, runValidators: true }
     );
     if (!product) {
       return res.status(404).send();

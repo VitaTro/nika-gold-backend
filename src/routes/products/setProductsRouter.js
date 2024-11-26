@@ -134,10 +134,10 @@ router.put("/:id", async (req, res) => {
 
 /**
  * @swagger
- * /api/products/set/{id}/visibility:
+ * /api/products/set/{id}:
  *   patch:
  *     tags: [Products/Set]
- *     summary: Змінити видимість набору
+ *     summary: Оновити властивості набору
  *     parameters:
  *       - in: path
  *         name: id
@@ -152,24 +152,42 @@ router.put("/:id", async (req, res) => {
  *           schema:
  *             type: object
  *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Назва набору
+ *               category:
+ *                 type: string
+ *                 description: Категорія набору
+ *               price:
+ *                 type: number
+ *                 description: Ціна набору
+ *               description:
+ *                 type: string
+ *                 description: Опис набору
+ *               photoUrl:
+ *                 type: string
+ *                 description: URL зображення набору
+ *               inStock:
+ *                 type: boolean
+ *                 description: Наявність на складі
  *               visible:
  *                 type: boolean
  *                 description: Видимість набору
  *     responses:
  *       200:
- *         description: Видимість набору змінено
+ *         description: Властивості набору оновлено
  *       400:
  *         description: Невірний запит
  *       404:
  *         description: Набір не знайдено
  */
-router.patch("/:id/visibility", async (req, res) => {
+router.patch("/:id", async (req, res) => {
   try {
-    const set = await SetProduct.findByIdAndUpdate(
-      req.params.id,
-      { visible: req.body.visible },
-      { new: true }
-    );
+    const updates = req.body; // Додаємо змінну updates
+    const set = await SetProduct.findByIdAndUpdate(req.params.id, updates, {
+      new: true,
+      runValidators: true,
+    });
     if (!set) {
       return res.status(404).send();
     }
@@ -178,26 +196,27 @@ router.patch("/:id/visibility", async (req, res) => {
     res.status(400).send(error);
   }
 });
+
 /**
  * @swagger
  * /api/products/set/{id}:
  *   delete:
  *     tags: [Products/Set]
- *     summary: Видалити продукт набору
+ *     summary: Видалити набір
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: ID продукту
+ *         description: ID набору
  *     responses:
  *       200:
- *         description: Продукт видалено
+ *         description: Набір видалено
  *       400:
  *         description: Невірний запит
  *       404:
- *         description: Продукт не знайдено
+ *         description: Набір не знайдено
  */
 router.delete("/:id", async (req, res) => {
   try {
@@ -205,9 +224,10 @@ router.delete("/:id", async (req, res) => {
     if (!set) {
       return res.status(404).send();
     }
-    res.status(200).send({ message: "Product deleted successfully" });
+    res.status(200).send({ message: "Set deleted successfully" });
   } catch (error) {
     res.status(400).send(error);
   }
 });
+
 module.exports = router;

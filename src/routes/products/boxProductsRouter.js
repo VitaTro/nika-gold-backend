@@ -159,10 +159,10 @@ router.put("/:id", async (req, res) => {
 
 /**
  * @swagger
- * /api/products/box/{id}/visibility:
+ * /api/products/box/{id}:
  *   patch:
  *     tags: [Products/Box]
- *     summary: Змінити видимість коробки
+ *     summary: Оновити властивості коробки
  *     parameters:
  *       - in: path
  *         name: id
@@ -177,24 +177,42 @@ router.put("/:id", async (req, res) => {
  *           schema:
  *             type: object
  *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Назва продукту
+ *               category:
+ *                 type: string
+ *                 description: Категорія продукту
+ *               price:
+ *                 type: number
+ *                 description: Ціна продукту
+ *               description:
+ *                 type: string
+ *                 description: Опис продукту
+ *               photoUrl:
+ *                 type: string
+ *                 description: URL зображення продукту
+ *               inStock:
+ *                 type: boolean
+ *                 description: Наявність на складі
  *               visible:
  *                 type: boolean
  *                 description: Видимість коробки
  *     responses:
  *       200:
- *         description: Видимість коробки змінено
+ *         description: Властивості коробки оновлено
  *       400:
  *         description: Невірний запит
  *       404:
  *         description: Коробку не знайдено
  */
-router.patch("/:id/visibility", async (req, res) => {
+router.patch("/:id", async (req, res) => {
   try {
-    const box = await BoxProduct.findByIdAndUpdate(
-      req.params.id,
-      { visible: req.body.visible },
-      { new: true }
-    );
+    const updates = req.body;
+    const box = await BoxProduct.findByIdAndUpdate(req.params.id, updates, {
+      new: true,
+      runValidators: true,
+    });
     if (!box) {
       return res.status(404).send();
     }
