@@ -66,10 +66,7 @@ const GoldProduct = require("../../schemas/goldProducts");
  */
 router.get("/", async (req, res) => {
   try {
-    const filter = { visible: true };
-    if (req.query.category) {
-      filter.category = req.query.category;
-    }
+    const filter = { visible: true, category: "gold" };
     if (req.query.subcategory) {
       filter.subcategory = req.query.subcategory;
     }
