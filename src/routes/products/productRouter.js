@@ -12,6 +12,7 @@ const Product = require("../../schemas/product");
  *         - name
  *         - category
  *         - price
+ *         - size
  *       properties:
  *         name:
  *           type: string
@@ -19,6 +20,9 @@ const Product = require("../../schemas/product");
  *         category:
  *           type: string
  *           description: Категорія продукту
+ *         subcategory:
+ *           type: string
+ *           description: Підкатегорія продукту
  *         price:
  *           type: number
  *           description: Ціна продукту
@@ -28,12 +32,19 @@ const Product = require("../../schemas/product");
  *         photoUrl:
  *           type: string
  *           description: URL зображення продукту
- * inStock:
+ *         size:
+ *           type: string
+ *           description: Розмір продукту
+ *         inStock:
  *           type: boolean
  *           description: Наявність на складі
- *visible:
+ *         visible:
  *           type: boolean
- *           description: Видимість коробки
+ *           description: Видимість продукту
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: Дата створення продукту
  */
 
 /**
@@ -129,6 +140,7 @@ router.post("/", async (req, res) => {
       price,
       description,
       photoUrl,
+      size, // Додано поле size
       inStock,
       visible,
       createdAt,
@@ -141,6 +153,7 @@ router.post("/", async (req, res) => {
       price,
       description,
       photoUrl,
+      size, // Додано поле size
       inStock,
       visible,
       createdAt,
@@ -195,6 +208,44 @@ router.patch("/:id", async (req, res) => {
       return res.status(404).send("Product not found");
     }
     res.json(product);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   delete:
+ *     summary: Видалити продукт
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Ідентифікатор продукту
+ *     responses:
+ *       200:
+ *         description: Продукт видалено
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: Продукт не знайдено
+ *       500:
+ *         description: Внутрішня помилка сервера
+ */
+router.delete("/:id", async (req, res) => {
+  try {
+    const product = await Product.findByIdAndDelete(req.params.id);
+
+    if (!product) {
+      return res.status(404).send("Product not found");
+    }
+    res.send({ message: "Product deleted successfully" });
   } catch (error) {
     res.status(500).send(error);
   }

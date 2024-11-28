@@ -25,8 +25,18 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  inStock: { type: Boolean, default: true },
-  visible: { type: Boolean, default: true },
+  size: {
+    type: String, // Можна також використовувати Number, залежно від типу розміру
+    required: true,
+  },
+  inStock: {
+    type: Boolean,
+    default: true,
+  },
+  visible: {
+    type: Boolean,
+    default: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
