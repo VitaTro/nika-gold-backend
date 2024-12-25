@@ -2,69 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Product = require("../../schemas/product");
 
-/**
- * @swagger
- * components:
- *   schemas:
- *     Product:
- *       type: object
- *       required:
- *         - name
- *         - category
- *         - price
- *         - size
- *       properties:
- *         name:
- *           type: string
- *           description: Назва продукту
- *         category:
- *           type: string
- *           description: Категорія продукту
- *         subcategory:
- *           type: string
- *           description: Підкатегорія продукту
- *         price:
- *           type: number
- *           description: Ціна продукту
- *         description:
- *           type: string
- *           description: Опис продукту
- *         photoUrl:
- *           type: string
- *           description: URL зображення продукту
- *         size:
- *           type: string
- *           description: Розмір продукту
- *         inStock:
- *           type: boolean
- *           description: Наявність на складі
- *         visible:
- *           type: boolean
- *           description: Видимість продукту
- *         createdAt:
- *           type: string
- *           format: date-time
- *           description: Дата створення продукту
- */
-
-/**
- * @swagger
- * /api/products:
- *   get:
- *     summary: Отримати всі продукти
- *     tags: [Products]
- *     responses:
- *       200:
- *         description: Список всіх продуктів
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Product'
- *       500:
- *         description: Внутрішня помилка сервера
- */
+// Маршрут для отримання всіх продуктів
 router.get("/", async (req, res) => {
   try {
     const products = await Product.find({});
@@ -74,31 +12,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/products/{type}:
- *   get:
- *     summary: Отримати продукти за типом
- *     tags: [Products]
- *     parameters:
- *       - in: path
- *         name: type
- *         schema:
- *           type: string
- *         required: true
- *         description: Тип продукту
- *     responses:
- *       200:
- *         description: Список продуктів за типом
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Product'
- *       500:
- *         description: Внутрішня помилка сервера
- */
+// Маршрут для отримання продуктів за типом
 router.get("/:type", async (req, res) => {
   try {
     const type = req.params.type;
@@ -109,28 +23,7 @@ router.get("/:type", async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/products:
- *   post:
- *     summary: Додавання нового продукту
- *     tags: [Products]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Product'
- *     responses:
- *       201:
- *         description: Продукт додано
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Product'
- *       500:
- *         description: Внутрішня помилка сервера
- */
+// Маршрут для додавання нового продукту
 router.post("/", async (req, res) => {
   try {
     const {
@@ -166,37 +59,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/products/{id}:
- *   patch:
- *     summary: Оновлення продукту
- *     tags: [Products]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Ідентифікатор продукту
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Product'
- *     responses:
- *       200:
- *         description: Продукт оновлено
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Product'
- *       404:
- *         description: Продукт не знайдено
- *       500:
- *         description: Внутрішня помилка сервера
- */
+// Маршрут для оновлення продукту
 router.patch("/:id", async (req, res) => {
   try {
     const updates = req.body;
@@ -213,31 +76,7 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/products/{id}:
- *   delete:
- *     summary: Видалити продукт
- *     tags: [Products]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Ідентифікатор продукту
- *     responses:
- *       200:
- *         description: Продукт видалено
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Product'
- *       404:
- *         description: Продукт не знайдено
- *       500:
- *         description: Внутрішня помилка сервера
- */
+// Маршрут для видалення продукту
 router.delete("/:id", async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
