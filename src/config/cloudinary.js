@@ -1,20 +1,19 @@
 const cloudinary = require("cloudinary").v2;
-// Configuration
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
 cloudinary.config({
-  cloud_name: "dblh78pvc",
-  api_key: "517839929787991",
-  api_secret: "rswcLCmk6ew6-HiA8_rbAowHYTk",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const getImageUrl = (publicId) => {
-  return cloudinary.url(publicId, {
-    fetch_format: "auto",
-    quality: "auto",
-  });
-};
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "products",
+    format: async (req, file) => "jpg",
+    public_id: (req, file) => file.originalname,
+  },
+});
 
-// Приклад використання для тестування
-const imageUrl = getImageUrl("products/gold/image1");
-console.log(imageUrl);
-
-module.exports = cloudinary;
+module.exports = { cloudinary, storage };
