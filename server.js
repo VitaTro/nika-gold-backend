@@ -2,11 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const passport = require("passport");
-const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./swagger-resolved.json");
 const passportConfig = require("./src/config/config-passport");
 const app = require("./App");
-const { storage, cloudinary } = require("./src/config/cloudinary"); // Імпорт конфігурації Cloudinary
+const { storage, cloudinary } = require("./src/config/cloudinary");
 const multer = require("multer");
 const upload = multer({ storage: storage });
 
@@ -26,7 +24,12 @@ mongoose
 passportConfig(passport);
 app.use(passport.initialize());
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument)); // Використання resolved.json
+// Перенаправлення документації API на SwaggerHub
+const swaggerHubUrl =
+  "https://app.swaggerhub.com/apis/VITYLJATROJAN/nika_gold/2.0.0";
+app.use("/api-docs", (req, res) => {
+  res.redirect(swaggerHubUrl);
+});
 
 // Маршрут для завантаження зображень
 app.post("/upload", upload.single("photo"), (req, res) => {
