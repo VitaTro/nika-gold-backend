@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Product = require("../../schemas/product");
-
+const upload = require("../../middleware/uploadMiddleware");
+const { cloudinary } = require("../../config/cloudinary");
 // Маршрут для отримання всіх продуктів
 router.get("/", async (req, res) => {
   try {
@@ -32,12 +33,13 @@ router.post("/", async (req, res) => {
       subcategory,
       price,
       description,
-      photoUrl,
-      size, // Додано поле size
+      size,
       inStock,
       visible,
       createdAt,
     } = req.body;
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const photoUrl = result.secure_url;
 
     const newProduct = new Product({
       name,
@@ -46,7 +48,7 @@ router.post("/", async (req, res) => {
       price,
       description,
       photoUrl,
-      size, // Додано поле size
+      size,
       inStock,
       visible,
       createdAt,
